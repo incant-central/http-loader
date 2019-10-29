@@ -23,13 +23,18 @@ function HttpLoader({ spec } = {}) {
         proxy = null
     } = spec;
 
-    async function httpTarget(data = {}, { name:cmdPath }) {
-        const requestOptions = {
+    async function httpTarget(requestOptions = {}, { name:cmdPath }) {
+        const {
+            data:requestData = {},
+            params:requestParams = {},
+        } = requestOptions;
+
+        const options = {
             url,
             method,
             headers,
-            params,
-            data,
+            params: requestParams,
+            data: requestData,
             timeout,
             withCredentials,
             auth,
@@ -46,11 +51,11 @@ function HttpLoader({ spec } = {}) {
         const {
             status,
             statusText,
-            headers,
-            data
-        } = await axios(requestOptions);
+            headers:responseHeaders,
+            data:responseData
+        } = await axios(options);
 
-        return data;
+        return responseData;
     }
 
     return httpTarget;
